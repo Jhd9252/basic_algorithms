@@ -1,0 +1,391 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class Main {
+	public static void main(String[] args) {
+		
+		// Arrays Exercise 1
+		System.out.println(checkReversed("gOog le", "elgooG")); 
+		
+		// Arrays Exercise 2
+		shortestOfThree("Other entries include a historic district in Charlottesville Virginia cut-flower greenhouse complex");
+		int [] a = new int [] {4,77,98,30,20,50,77,22,49,2};
+		
+		// Recursion Exercise 1
+		System.out.println(findMaxBinary(a,0,a.length-1));
+		
+		// Recursion Exercise 2
+		System.out.println(findZeroesRecursive(0, 0));
+		
+		// Recursion Exercise 3
+		String b = "radar";
+		System.out.println(palindromeRecursive(b,0,b.length()-1));
+		
+		// Sorting Exercise 1: BubbleSort Non-Recursive
+		System.out.println("BubbleSort: ");
+		int [] c = bubbleSort(a);
+		for (int d: c) {
+			System.out.print(d+",");
+		}
+		System.out.println();
+		check(a);
+		
+		// Sorting Exercise 2: BubbleSort Recursive
+		System.out.println("BubbleSortRecursive: ");
+		int [] d = bubbleSortRecursive(a, a.length-1);
+		for (int e: d) {
+			System.out.print(e+",");
+		}
+		System.out.println();
+		check(a);
+		
+		// Sorting Exercise 3: SelctionSort Non-Recursive
+		System.out.println("SelectionSort:");
+		int [] e = selectionSort(a);
+		for (int f:e) {
+			System.out.print(f + ",");
+		}
+		System.out.println();
+		check(a);
+		
+		// Sorting Exercise 4: InsertionSort Non-Recursive
+		System.out.println("InsertionSort:");
+		int [] f = insertionSort(a);
+		for (int g:f) {
+			System.out.print(g+",");
+		}
+		System.out.println();
+		check(a);
+		
+		// Sorting Exercise 5: MergeSort Recursive
+		System.out.println("MergeSortBinary:");
+		int [] g = mergeSortBinary(a, 0, a.length-1);
+		for (int h:g) {
+			System.out.print(h+",");
+		}
+		System.out.println();
+		check(a);
+		
+		// Sorting Exercise 6: QuickSort Recursive
+		System.out.println("QuickSortRecursive:");
+		int [] h = Arrays.copyOf(a, a.length);
+		quickSortRecursive(h, 0, h.length-1);
+		for (int i:h) {
+			System.out.print(i+",");
+		}
+		System.out.println();
+		check(a);
+		
+		
+	}
+	// helper function to check if original array unchanged between each exercise check
+	public static void check(int [] a) {
+		int [] b = new int [] {4,77,98,30,20,50,77,22,49,2};
+		if (Arrays.equals(a, b)) {
+			System.out.println("Original Array Unchanged.");
+		} else {
+			System.out.println("Array changed.");
+		}
+	}
+	
+	// Arrays Exercise 1
+	// input: Assuming 2 strings. 
+	// process: compare two strings and check if they are palindromes. Ignore white spaces, lower/upper cases. 
+	// output: return 1 if true, return 0 if false.
+	public static int checkReversed(String a, String b) {
+		// clean strings (ignore space, ignore case)
+		char [] first = a.replaceAll("\\s", "").toLowerCase().toCharArray(); //O(n)
+		char [] second = b.replaceAll("\\s", "").toLowerCase().toCharArray(); //O(n)
+		// compare if strings are palindromes
+		//first check if strings are equal length
+		if (first.length != second.length) {
+			return 0; //O(1)
+		} else {
+			// For loop through first [] forwards, for loop through second [] backwards, compare
+			// if any indexes are !=, then return 0. Otherwise the algorithm hits return 1;
+			for (int i = 0; i > first.length-1; i++) //O(n)
+				for (int j = second.length-1; j < 0; j--) { //(On)
+					if (first[i] != second [j]) {
+						return 0; // O(1)
+					}
+				}
+			}
+		return 1; //O(1)
+		}
+	
+	// Arrays Exercise 2
+	//input: takes a very large string (assume words in multiple of 3 and at least 3 words). Assume proper spacing.
+	//process: for every multiple of 3 strings, pick the shortest length word. put into new string. If 2 strings are the same length in a group, pick the first one
+	//output: a string with the shortest words from each subgroup. 
+	
+	public static String shortestOfThree(String a) {
+		// split the string into array
+		// create new empty array with length = original array / 3 to hold answers
+		String [] words = a.split(" ");
+		String [] answer = new String [words.length/3] ;
+		// compare and grab the shortest length word
+		for(int i = 0; i < words.length-1; i+= 3) {
+			if (words[i].length() <= words[i+1].length() && words[i].length() <= words[i+2].length()) {
+				answer[i/3] = words[i];
+			} else if (words[i+1].length() <= words[i].length() && words[i].length() <= words[i+2].length()) {
+				answer[i/3] = words[i+1];
+			} else if (words[i+2].length() <= words[i].length() && words[i].length() <= words[i+1].length())
+				answer[i/3] = words[i+2];
+		}
+		// convert array to string by iteration
+		String finalAnswer = "";
+		for (int i = 0; i < answer.length; i++) {
+			finalAnswer += answer[i] + " ";
+		}
+		System.out.println(finalAnswer);
+		return finalAnswer;
+	}
+
+	// Recursion Exercise 1
+	// input: array size n of integers
+	// process: use binary recursion to find largest integer
+	// output: return maximum integer
+	public static int findMaxBinary(int[] a, int start, int stop) {
+		// base case is when the split array size difference is 1 or 0
+		if (stop - start <= 1) {
+			// return the max (if size diff = 1, return larger of the 2, is size diff = 0, then will return the same number)
+			return Math.max(a[start], a[stop]);
+		} else {
+			// set a midpoint to further split array
+			int mid = (start+stop) /2;
+			// call recursion on left half of array
+			int left =  findMaxBinary(a, start, mid);
+			// call recursion on right half of array
+			int right = findMaxBinary(a, mid +1, stop);
+			// return the max of all the "halves"
+			return Math.max(left, right);
+		}
+	}
+
+	// Recursion Exercise 2
+	// input: given integer n
+	// process: use recursive algorithm to find the number of zeroes in it's binary representation. DO NOT calculate binary representation of entire 
+		// N. No arrays. Using process behind conversion decimal to binary, count if n % 2 == 0, if so, zeroes + 1. This works
+		// for integer 8 and up. 
+	// output: return number of zeroes
+	
+	public static int findZeroesRecursive(int zeroes, int quotient) {
+		// base case: when quotient = 0;
+		if (quotient == 0) {
+			return zeroes;
+		} else {
+			if (quotient % 2 == 0) {
+				return findZeroesRecursive(zeroes+1,Math.floorDiv(quotient, 2));
+			} 
+			else {
+				return findZeroesRecursive(zeroes, Math.floorDiv(quotient, 2));
+			}
+		}
+	}
+	
+	// Recursion Exercise 3
+	// input: String a
+	// process: check if palindrome recursively. ignore all punctuation and white spaces. No given restrictions.
+	// output: return true or false
+
+
+	
+	public static boolean palindromeRecursive(String a, int startIndex, int stopIndex) {
+		// clean string, remove all punctuation, convert to all similiar case, convert to char Array
+		char [] array = a.replaceAll("\\p{Punct}","").toLowerCase().toCharArray();
+		// base case 1: even length string. Compares last two chars and return boolean
+		if (stopIndex - startIndex == 1) {
+			return array[startIndex] == array[stopIndex];
+		// base case 2: odd length string. Returns true.  
+		} else if (startIndex == stopIndex) {
+			return true;
+		} else {
+			// compare the outer char pairs -> recursive call to next inner pair of chars.
+			if (array[startIndex] == array[stopIndex]) {
+				return palindromeRecursive(a, startIndex+1, stopIndex-1);
+			}
+		}
+		return false;
+	}
+	
+	// Sorting Exercise 1: Bubble Sort Non-Recursive
+	// input: array of integers
+	// process: For each index in array, for integer in array, compare adjacent integer. Swap to order. 
+	// output: return Sorted array
+	
+	public static int [] bubbleSort(int [] a) {
+		 int [] b = Arrays.copyOf(a, a.length); 
+		 for (int i = 0; i < b.length-1; i++) {
+			 for (int j = 0; j < b.length-1;j++) {
+				 if (b[j] > b[j+1]) {
+					 int placeholder = b[j];
+					 b[j] = b[j+1];
+					 b[j+1] = placeholder;
+				 }
+			 }
+		 }
+		 return b;
+	 }
+	
+	// Sorting Exercise 2: Bubble Sort Recursive
+	// input: array of integers
+	// process: Base case. Do 1 pass of bubble sort. Move onto next index using recursion. 
+	// output: return sorted array
+	
+	public static int [] bubbleSortRecursive(int [] a, int stop) {
+		 // base case: if stop (length -1) == 1
+		 if (stop == 0) {
+			 return a;
+		 }
+		int [] b = Arrays.copyOf(a, a.length);
+		for (int i = 0; i < b.length-1;i++) {
+			if (b[i] > b[i+1]) {
+				int placeholder = b[i];
+				b[i] = b[i+1];
+				b[i+1] = placeholder;
+			}
+		}
+		return bubbleSortRecursive(b, stop-1); 
+	 }
+	
+			 
+	// Sorting Exercise 3: Selection Sort Non-Recursive
+	// input: integer array
+	// process: Divide array into sorted(left) and unsorted(right). Find smallest in unsorted. Swap with last index of left.
+	// output: Sorted integer array
+public static int [] selectionSort(int [] a) {
+		 // create new array to return in case we want to keep original
+		 // create a placeholder for the smallest element found
+		 int [] b = Arrays.copyOf(a, a.length);
+		 int placeholder = b[0];
+		 // for every index in the array
+		 for (int i = 0; i < b.length; i++) {
+			 for (int j = i; j < b.length; j++) {
+				 // for every integer in array for that index, if it is smaller, swap
+				 if (b[j] < b[i]) {
+					 placeholder = b[i];
+					 b[i] = b[j];
+					 b[j] = placeholder;
+				 }
+			 }
+		 }
+		 return b;
+	 }
+
+	
+	// Sorting Exercise 4: Insertion Sort Non-Recursive
+	// input: integer array
+	// process: create new array. Iterate through index(1,-1). If current index < previous index, iterate backwards to find spot. 
+	// output: return sorted array
+	 public static int [] insertionSort(int [] a) {
+		 // create copy of orginal array
+		 int [] b = Arrays.copyOf(a, a.length);
+		 // Skip index 0 and start with index 1
+		 for (int i = 1; i < b.length; i++) {
+			 // create variables to hold current index and current index value
+			 int placeholder = b[i];
+	         int index = i;
+	         // while loop or for loop to iterate backwards
+	         // if current index is greater than zero, and the previous index is greater than the current index value, swap
+	         while (index > 0 && b[index - 1] > placeholder) {
+	        	 b[index] = b[index - 1];
+	        	 // iteration backwards
+	             index--;
+	         }
+	         b[index] = placeholder;
+	     }
+		 // return sorted copy of orginal array
+		 return b;
+	 }
+	 
+
+	 
+	// Sorting Exercise 5: Merge Sort Recursive
+	// input: integer array
+	// process: Base base. Using binary recursion, split arrays down into size 1 or 2. Merge back in order.
+	// output: sorted array
+	public static int [] mergeSortBinary(int[] a, int start, int stop) {
+		// base case: 
+		if (stop-start==0) {
+			int[] c = new int[1];
+			System.arraycopy(a, start, c, 0, 1);
+			return c;
+		// Recursive Decomposition
+		} else {
+			int midpoint = (start+stop) / 2;	
+			return merge(mergeSortBinary(a, start, midpoint), mergeSortBinary(a,midpoint +1, stop));
+		}
+	}
+	
+	// merge helper function	
+	public static int[] merge(int [] a, int [] b) {
+		int [] merged = new int [a.length+b.length];
+		// merge arrays
+		for (int i = 0; i< a.length;i++) {
+			merged[i] = a[i];
+		}
+		for (int j = 0; j<b.length;j++) {
+			merged[j+a.length]=b[j];
+		}
+
+		// for every empty index in new array
+		for(int i = 0 ; i < merged.length;i++){
+			for(int j = i+1 ; j< merged.length;j++){
+				if(merged[i] > merged[j]){
+					int temp = merged[i];
+		            merged[i] = merged[j];
+		            merged[j] = temp;
+		        }
+		    }
+		}
+			return merged;
+	}
+	
+
+	// Sorting Exercise 6: Quick Sort Recursive
+	// input: integer array with start and stop
+	// process: find the pivot element and sort the array left/right. Then binary recursive calls on each part of array.
+	// output:
+	public static void quickSortRecursive(int [] b, int start, int stop) {
+		// base case
+		if (start >= stop) {
+		//recursive decomposition
+		} else {
+			// use a helper function to choose pivot, sort left/right, and return new pivot alement
+			int pivot= partition(b, start, stop);
+			// binary recursion on 2 parts of the array
+	        quickSortRecursive(b, start, pivot-1);
+	        quickSortRecursive(b, pivot+1, stop);
+		}
+		
+	}
+	// Helper function
+	public static int partition(int b[], int start, int stop) {
+		// sets last element as first pivot as conventional
+	    int pivot = b[stop];
+	    
+	    // sets left variable
+	    int left = (start-1);
+	    // iterate through array using start and stop
+	    for (int j = start; j < stop; j++) {
+	    	// if the current index value is less or equal the current pivot value
+	        if (b[j] <= pivot) {
+	        	// set left + 1
+	            left++;
+	            // swap the value at left with the value at current j index
+	            int placeholder = b[left];
+	            b[left] = b[j];
+	            b[j] = placeholder;
+	        }
+	    }
+	    // swap left with the next index at the end 
+	    int placeholder = b[left+1];
+	    b[left+1] = b[stop];
+	    b[stop] = placeholder;
+	    //return new pivot index
+	    return left+1;
+	}
+
+	   
+	
+}
