@@ -1,0 +1,29 @@
+ public static int partition(int [] a, int left, int right) {
+		// set pivot element as the last element by convention
+		int piv = a[right];
+		int holder = left -1;
+		// if element starting at given index less than pivot, move holder up, and swap at current index
+		for (int i = left; i <= right-1;i++) {
+			if (a[i] < piv) {
+				holder ++;			
+				swap(a, holder, i);
+			}
+		}
+		swap(a, holder+1, right);
+		return holder + 1;	
+	}
+	
+	// helper function swap() to simply swap 2 given indexes in array.
+	public static void swap(int [] a, int b, int c) {
+		int temp = a[b];
+	    a[b] = a[c];
+	    a[c] = temp;
+	}
+	// main quick sort function. Divide and conquer by recursively calling quicksort on both sides of partition. 
+	public static void quickSort(int [] a, int left, int right) {
+		if (left < right) {
+			int part = partition(a, left, right);
+			quickSort(a, left, part-1);
+			quickSort(a, part+1, right);
+		}
+	}
