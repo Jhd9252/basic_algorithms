@@ -1,0 +1,6 @@
+public static void sortArrayBST(Tree t, int [] a, ArrayList<Integer> n) {
+		for (int b: a) {
+			t.insert(b);
+		}
+		System.out.print(t.isBST(t, n));
+}
