@@ -1,0 +1,39 @@
+public static int[] merge(int [] a, int [] b) {
+		int [] merged = new int [a.length+b.length];
+		// merge arrays
+		for (int i = 0; i< a.length;i++) {
+			merged[i] = a[i];
+		}
+		for (int j = 0; j<b.length;j++) {
+			merged[j+a.length]=b[j];
+		}
+
+		// for every empty index in new array
+		for(int i = 0 ; i < merged.length;i++){
+	        for(int j = i+1 ; j< merged.length;j++){
+	            if(merged[i] > merged[j]){
+	                int temp = merged[i];
+	                merged[i] = merged[j];
+	                merged[j] = temp;
+	            }
+	        }
+	    }
+		return merged;
+	}
+	
+	
+	// input: integer array, int start = 0, int stop = last index pos
+	// process: base case, recursive decomposition component
+	// output: return a new sorted array
+	public static int [] mergeSortBinary(int[] a, int start, int stop) {
+		// base case: 
+		if (stop-start==0) {
+			int[] c = new int[1];
+			System.arraycopy(a, start, c, 0, 1);
+			return c;
+		// Recursive Decomposition
+		} else {
+			int midpoint = (start+stop) / 2;	
+		    return merge(mergeSortBinary(a, start, midpoint), mergeSortBinary(a,midpoint +1, stop));
+		}
+	}
